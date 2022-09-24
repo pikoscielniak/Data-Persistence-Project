@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,6 +9,12 @@ using UnityEngine.UI;
 public class StartMenu : MonoBehaviour
 {
     [SerializeField] private Button startButton;
+    [SerializeField] private TextMeshProUGUI bestScoreText;
+
+    private void Start()
+    {
+        bestScoreText.text = SessionStorage.Instance.GetBestScoreText();
+    }
 
     private void Update()
     {
