@@ -1,4 +1,5 @@
-using System;
+using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class SessionStorage : MonoBehaviour
@@ -17,6 +18,18 @@ public class SessionStorage : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        LoadBestScore();
+    }
+
+    private static string BestScorePath => Path.Combine(Application.persistentDataPath, "best_score.json");
+
+    private void LoadBestScore()
+    {
+        var path = BestScorePath;
+        if (!File.Exists(path)) return;
+
+        var json = File.ReadAllText(path);
+        BestScore = JsonConvert.DeserializeObject<BestScoreData>(json);
     }
 
     public void SetUsername(string text)
@@ -69,10 +82,16 @@ public class SessionStorage : MonoBehaviour
 
     private void SaveBestScore()
     {
+        if (BestScore == null)
+        {
+            return;
+        }
+
+        var json = JsonConvert.SerializeObject(BestScore);
+        File.WriteAllText(BestScorePath, json);
     }
 }
 
-[Serializable]
 public class BestScoreData
 {
     public string Username { get; set; }
