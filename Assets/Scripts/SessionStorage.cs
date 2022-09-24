@@ -18,5 +18,10 @@ public class SessionStorage : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public void SetUsername(string text)
+    {
+        CurrentUsername = text;
+    }
+
     public bool HasUsername => !string.IsNullOrWhiteSpace(CurrentUsername);
 }
