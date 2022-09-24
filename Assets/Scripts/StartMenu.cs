@@ -13,7 +13,7 @@ public class StartMenu : MonoBehaviour
 
     private void Start()
     {
-        bestScoreText.text = SessionStorage.Instance.GetBestScoreText();
+        bestScoreText.text = SessionStorage.GetBestScoreText();
     }
 
     private void Update()

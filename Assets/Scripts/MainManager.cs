@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,31 +9,43 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text bestScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
     private int m_Points;
-    
+
     private bool m_GameOver = false;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        InitBricks();
+        SetBaseScoreText();
+    }
+
+    private void InitBricks()
+    {
         const float step = 0.6f;
-        int perLine = Mathf.FloorToInt(4.0f / step);
-        
-        int[] pointCountArray = new [] {1,1,2,2,5,5};
-        for (int i = 0; i < LineCount; ++i)
+        var perLine = Mathf.FloorToInt(4.0f / step);
+
+        int[] pointCountArray = {1, 1, 2, 2, 5, 5};
+        for (var i = 0; i < LineCount; ++i)
         {
-            for (int x = 0; x < perLine; ++x)
+            for (var x = 0; x < perLine; ++x)
             {
-                Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
+                var position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+    }
+
+    private void SetBaseScoreText()
+    {
+        bestScoreText.text = SessionStorage.GetBestScoreText();
     }
 
     private void Update()
@@ -70,6 +80,8 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        SessionStorage.Instance.TryUpdateMainScore(m_Points);
+        SetBaseScoreText();
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
